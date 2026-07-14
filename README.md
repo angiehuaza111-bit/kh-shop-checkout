@@ -29,6 +29,7 @@ This repository contains **two independent projects**:
 - [Database & migrations](#database--migrations)
 - [Running locally](#running-locally)
 - [Running with Docker](#running-with-docker)
+- [Deployment](#deployment)
 - [API documentation](#api-documentation)
 - [Tests & coverage](#tests--coverage)
 - [Architecture](#architecture)
@@ -115,6 +116,14 @@ development):
 docker compose up -d postgres
 ```
 
+## Deployment
+
+The API is deployed on an AWS EC2 instance running the same Docker Compose
+setup described above (Postgres + API containers behind an Elastic IP, so the
+address stays stable across instance restarts). The mobile app's
+`API_BASE_URL` points directly at this deployment — see
+[`mobile/src/config/env.ts`](mobile/src/config/env.ts).
+
 ## API documentation
 
 Swagger/OpenAPI UI: **`http://localhost:3000/docs`** (generated from the same
@@ -154,6 +163,11 @@ npm run test:cov    # unit tests with coverage report
 
 Threshold enforced in `package.json` (`jest.coverageThreshold`): **80%** on all
 four metrics — the build fails if coverage regresses below that.
+
+Static analysis is also configured via SonarQube (`sonar-project.properties`
+at the repo root), scanning both `src` (backend) and `mobile/src` (mobile)
+and consuming the same coverage reports (`coverage/lcov.info`,
+`mobile/coverage/lcov.info`).
 
 Every layer is tested in isolation:
 - **Domain** (`*.entity.spec.ts`): pure unit tests, no mocks, no framework.
