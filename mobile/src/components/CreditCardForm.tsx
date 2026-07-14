@@ -141,7 +141,7 @@ export function CreditCardForm({ onSubmit, onValuesChange }: Readonly<CreditCard
             placeholder="123"
             placeholderTextColor={theme.colors.textSecondary}
             keyboardType="number-pad"
-            maxLength={4}
+            maxLength={3}
             secureTextEntry
             value={cvc}
             onChangeText={setCvc}

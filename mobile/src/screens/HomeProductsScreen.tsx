@@ -1,10 +1,11 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { FlatList, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Search, ShoppingCart, Sun, Moon } from 'lucide-react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { addProduct, decrementItem, incrementItem, selectCartItemCount } from '../features/cart/cartSlice';
-import { Product } from '../features/products/productsSlice';
+import { fetchProducts, Product } from '../features/products/productsSlice';
 import { ProductCard } from '../components/ProductCard';
 import { CartSheet } from '../components/CartSheet';
 import { BottomNavBar, BottomNavKey } from '../components/BottomNavBar';
@@ -26,6 +27,12 @@ export function HomeProductsScreen({ navigation }: Readonly<Props>): React.JSX.E
   const [isCartVisible, setCartVisible] = useState(false);
   const [search, setSearch] = useState('');
   const { isDark, toggleTheme } = useThemeContext();
+
+  useFocusEffect(
+    useCallback(() => {
+      dispatch(fetchProducts());
+    }, [dispatch]),
+  );
 
   const quantityFor = (productId: string): number =>
     cartItems.find((item) => item.productId === productId)?.quantity ?? 0;
